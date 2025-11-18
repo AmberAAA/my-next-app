@@ -1,7 +1,6 @@
-import { db } from "@/db";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { todoRoute } from "./todo.route";
+import { todoRoute } from "./route/todo.route";
 export const dynamic = "force-dynamic";
 
 const app = new Hono().basePath("/api");
