@@ -1,3 +1,4 @@
+import { db } from "@/db";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 export const dynamic = "force-dynamic";
@@ -5,6 +6,7 @@ export const dynamic = "force-dynamic";
 const app = new Hono().basePath("/api");
 
 app.get("/hello", (c) => {
+  console.log(db);
   return c.json({
     message: "Hello from Hono on Vercel!",
   });
