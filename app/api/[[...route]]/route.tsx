@@ -1,3 +1,5 @@
+import { verifySession } from "@/lib/session";
+import { ISelectUser } from "@/model/user.model";
 import { todoRoute } from "@/route/todo.route";
 import { userRoute } from "@/route/user.route";
 import { Hono } from "hono";
@@ -5,6 +7,21 @@ import { handle } from "hono/vercel";
 export const dynamic = "force-dynamic";
 
 const app = new Hono().basePath("/api");
+
+declare module "hono" {
+  interface ContextVariableMap {
+    user: ISelectUser
+  }
+}
+
+
+app.use("/", async (c, next) => {
+  const { user } = await verifySession();
+  if (user) {
+    c.set("user", user);
+  }
+  next();
+});
 
 app.route("/todo", todoRoute);
 app.route("/user", userRoute);

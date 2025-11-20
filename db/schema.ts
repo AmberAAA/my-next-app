@@ -12,6 +12,7 @@ export const todosTable = pgTable("todos", {
   completed: boolean().notNull().default(false),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
+  userId: integer().references(() => usersTable.id),
 });
 
 export const usersTable = pgTable("users", {

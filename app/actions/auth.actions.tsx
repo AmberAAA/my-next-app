@@ -4,7 +4,7 @@ import { usersTable } from "@/db/schema";
 import { createUserSchema, loginUserSchema } from "@/model/user.model";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { createSession } from "@/lib/session";
+import { createSession, removeSession } from "@/lib/session";
 import { createUser } from "@/serveice/user.service";
 
 export const loginAction = async (formData: unknown) => {
@@ -17,7 +17,7 @@ export const loginAction = async (formData: unknown) => {
   });
   if (user) {
     await createSession(user!.id);
-    redirect("/");
+    redirect("/todo");
   }
 };
 
@@ -28,4 +28,9 @@ export const signupAction = async (formData: unknown) => {
     await createSession(user!.id);
     redirect("/");
   }
+};
+
+export const logoutAction = async () => {
+  await removeSession();
+  redirect("/login");
 };
