@@ -15,13 +15,14 @@ declare module "hono" {
 }
 
 
-app.use("/", async (c, next) => {
+app.use("/*", async (c, next) => {
   const { user } = await verifySession();
   if (user) {
     c.set("user", user);
   }
-  next();
+  await next();
 });
+
 
 app.route("/todo", todoRoute);
 app.route("/user", userRoute);
