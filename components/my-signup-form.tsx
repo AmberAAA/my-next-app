@@ -7,9 +7,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { sign } from "crypto";
-import { signup } from "@/app/actions/auth.actions";
-import { ICreateUser } from "@/model/user.model";
+import { signupAction } from "@/app/actions/auth.actions";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -35,10 +33,7 @@ export const MySignupForm = () => {
 
 
   const onSubmit: SubmitHandler<IFormBody> = async (data) => {
-    await fetch("/api/user/signup", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    await signupAction(data)
   };
 
   return (

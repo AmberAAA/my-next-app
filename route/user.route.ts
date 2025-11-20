@@ -1,9 +1,6 @@
-import { db } from "@/db";
-import { usersTable } from "@/db/schema";
-import { createSession, decrypt } from "@/lib/session";
-import { createUserSchema, loginUserSchema } from "@/model/user.model";
+import {  decrypt } from "@/lib/session";
+import { createUserSchema } from "@/model/user.model";
 import { createUser } from "@/serveice/user.service";
-import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cookies } from "next/headers";
 
@@ -15,21 +12,6 @@ app.post("/signup", async (c) => {
   const user = createUserSchema.parse(await c.req.json());
   const newUser = await createUser(user);
   return c.json({ message: "User created", user: newUser });
-});
-
-app.get("/login", async (c) => {
-  const body = loginUserSchema.parse(c.req.query());
-  const user = await db.query.usersTable.findFirst({
-    where: and(
-      eq(usersTable.email, body.email),
-      eq(usersTable.password, body.password)
-    ),
-  });
-  if (user) {
-    await createSession(user.id);
-    return c.json({ message: "Login successful", user: user });
-  }
-  return c.json({ message: "Invalid credentials" }, 401);
 });
 
 app.get("/logout", async (c) => {

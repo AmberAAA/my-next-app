@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { cache } from "react";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -22,10 +23,13 @@ export async function decrypt(session: string | undefined = "") {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
     });
-    return payload;
+    if (payload.exp && payload.exp > Date.now() / 1000) {
+      return payload as ISelectUser;
+    }
   } catch (error) {
     console.error("Failed to verify session", error);
   }
+  return null;
 }
 
 export async function createSession(id: number) {
@@ -44,3 +48,19 @@ export async function createSession(id: number) {
     path: "/",
   });
 }
+
+export const verifySession = cache(async () => {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.id) {
+    return { isAuth: false };
+  }
+
+  return { isAuth: true, userId: session.id, user: session };
+});
+
+export const removeSession = cache(async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+});
