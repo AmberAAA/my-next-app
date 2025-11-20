@@ -1,10 +1,9 @@
-import { getTodoList } from "./api/[[...route]]/serveice/todo.service";
+import { Button } from "@/components/ui/button";
 
 export default async function Home() {
-  const list = await getTodoList();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <pre>{JSON.stringify(list, null, 2)}</pre>
+    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
+      <Button>A</Button>
     </div>
   );
 }
