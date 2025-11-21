@@ -1,7 +1,7 @@
-import { CreateTodoInline } from "@/components/todo/create-inline";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CreateTodoInline } from "@/app/(dashboard)/todo/_component/create-inline";
 import { verifySession } from "@/lib/session";
 import { getUsersTodoList } from "@/serveice/todo.service";
+import TodoList from "./_component/todo-list";
 
 export default async function TodoPage() {
   const { userId } = await verifySession();
@@ -10,16 +10,7 @@ export default async function TodoPage() {
   return (
     <div>
       <CreateTodoInline />
-      <Card>
-        <CardHeader>
-          <CardTitle>TODO LIST</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {list.map((todo) => (
-            <div key={todo.id}>{todo.title}</div>
-          ))}
-        </CardContent>
-      </Card>
+      <TodoList initList={list} />
     </div>
   );
 }
