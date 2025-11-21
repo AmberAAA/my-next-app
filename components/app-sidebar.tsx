@@ -1,6 +1,4 @@
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
-
 import {
   Sidebar,
   SidebarContent,
@@ -9,12 +7,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { verifySession } from "@/lib/session";
+import Link from "next/link";
 
 // This is sample data.
 const data = {
@@ -28,9 +24,13 @@ const data = {
 }
 
 export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = await verifySession();
   return (
     <Sidebar {...props}>
       <SidebarContent>
+        <SidebarHeader className="flex justify-end items-center h-[56px] border-b">
+          <Link className="" href="/logout">HI {user?.email}</Link>
+        </SidebarHeader>
         <SidebarGroup>
           <SidebarMenu>
             {data.navMain.map((item) => (
@@ -58,5 +58,5 @@ export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sideb
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

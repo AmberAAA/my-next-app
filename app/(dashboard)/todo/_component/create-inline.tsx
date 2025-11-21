@@ -14,6 +14,9 @@ export function CreateTodoInline() {
     mutationFn: async (todo: ICreateTodoSchema) => {
       return await fetch("/api/todo/create", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(todo),
       });
     },

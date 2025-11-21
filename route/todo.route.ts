@@ -1,6 +1,17 @@
 import { Hono } from "hono";
-import { createTodo, getUsersTodoList, updateTodo } from "../serveice/todo.service";
-import { createTodoSchema, updateTodoSchema } from "@/model/todo.model";
+import {
+  createTodo,
+  deleteTodo,
+  getUsersTodoList,
+  updateTodo,
+} from "../serveice/todo.service";
+import {
+  createTodoSchema,
+  deleteTodoSchema,
+  updateTodoSchema,
+} from "@/model/todo.model";
+import { zValidator } from "@hono/zod-validator";
+import { handleValidationError } from "@/lib/utils";
 
 const app = new Hono();
 
@@ -10,16 +21,43 @@ app.get("/list", async (c) => {
   return c.json({ list });
 });
 
-app.post("/create", async (c) => {
-  const { id } = c.get("user");
-  const todo = createTodoSchema.parse(await c.req.json());
-  const newTodo = await createTodo({ ...todo, userId: id });
-  return c.json({ message: "Todo created", todo: newTodo });
-})
+app.post(
+  "/create",
+  zValidator("json", createTodoSchema, handleValidationError),
+  async (c) => {
+    const { id } = c.get("user");
+    const todo = c.req.valid("json");
+    const newTodo = await createTodo({ ...todo, userId: id });
+    return c.json({ success: true, message: "Todo created", todo: newTodo });
+  }
+);
 
-app.put("/update", async (c) => {
-  const todo = updateTodoSchema.parse(await c.req.json());
-  const updatedTodo = await updateTodo(todo);
-  return c.json({ message: "Todo updated", todo: updatedTodo });
-});
+app.put(
+  "/update",
+  zValidator("json", updateTodoSchema, handleValidationError),
+  async (c) => {
+    const todo = c.req.valid("json");
+    const updatedTodo = await updateTodo(todo);
+    return c.json({
+      success: true,
+      message: "Todo updated",
+      todo: updatedTodo,
+    });
+  }
+);
+
+app.post(
+  "/delete",
+  zValidator("json", deleteTodoSchema, handleValidationError),
+  async (c) => {
+    const { id } = c.req.valid("json");
+    const deletedTodo = await deleteTodo(id);
+    return c.json({
+      success: true,
+      message: "Todo deleted",
+      todo: deletedTodo,
+    });
+  }
+);
+
 export const todoRoute = app;

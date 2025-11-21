@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -19,6 +18,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { TodoItemCheckbox } from "./todo-item-checkbox";
+import { TodoItemDelete } from "./todo-item-delete";
 
 interface ITodoListProps {
   initList: ISelectTodo[];
@@ -26,7 +26,7 @@ interface ITodoListProps {
 
 const columns: ColumnDef<ISelectTodo>[] = [
   {
-    header: "#",
+    header: "Completed",
     accessorKey: "completed",
     cell: ({ row }) => {
       return <TodoItemCheckbox todo={row.original} />;
@@ -41,6 +41,13 @@ const columns: ColumnDef<ISelectTodo>[] = [
     accessorKey: "updatedAt",
     cell: ({ row }) => formatDateTimeString(row.original.updatedAt),
   },
+  {
+    header: "Actions",
+    accessorKey: "id",
+    cell: ({ row }) => {
+      return <TodoItemDelete id={row.original.id} />;
+    },
+  },
 ];
 
 export default function TodoTable({ initList }: ITodoListProps) {
@@ -52,6 +59,7 @@ export default function TodoTable({ initList }: ITodoListProps) {
       return data.list;
     },
     initialData: initList,
+    initialDataUpdatedAt: 0
   });
 
   // eslint-disable-next-line react-hooks/incompatible-library

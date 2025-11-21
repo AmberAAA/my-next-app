@@ -25,3 +25,8 @@ export const updateTodo = async (todo: IUpdateTodoSchema) => {
     .returning();
   return updatedTodo[0];
 };
+
+export const deleteTodo = async (id: number) => {
+  const deletedTodo = await db.delete(todosTable).where(eq(todosTable.id, id)).returning();
+  return deletedTodo[0];
+};

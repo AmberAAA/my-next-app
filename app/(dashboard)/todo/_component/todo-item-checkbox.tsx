@@ -14,6 +14,9 @@ export const TodoItemCheckbox = (props: ITodoItemCheckboxProps) => {
     mutationFn: async (todo: ISelectTodo) => {
       await fetch(`/api/todo/update`, {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(todo),
       });
     },

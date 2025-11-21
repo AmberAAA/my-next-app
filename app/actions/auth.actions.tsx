@@ -6,6 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { createSession, removeSession } from "@/lib/session";
 import { createUser } from "@/serveice/user.service";
+import { revalidatePath } from "next/cache";
 
 export const loginAction = async (formData: unknown) => {
   const body = loginUserSchema.parse(formData);
@@ -17,6 +18,7 @@ export const loginAction = async (formData: unknown) => {
   });
   if (user) {
     await createSession(user!.id);
+    revalidatePath("/");
     redirect("/todo");
   }
 };
