@@ -7,6 +7,14 @@ export const createTodoSchema = z.object({
   userId: z.number().optional()
 });
 
+export const updateTodoSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  completed: z.boolean(),
+});
+
 export type ICreateTodoSchema = z.infer<typeof createTodoSchema>;
 
 export type ISelectTodo = typeof todosTable.$inferSelect;
+
+export type IUpdateTodoSchema = z.infer<typeof updateTodoSchema>;

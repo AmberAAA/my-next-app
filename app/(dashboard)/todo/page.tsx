@@ -1,7 +1,7 @@
-import { CreateTodoInline } from "@/app/(dashboard)/todo/_component/create-inline";
 import { verifySession } from "@/lib/session";
 import { getUsersTodoList } from "@/serveice/todo.service";
-import TodoList from "./_component/todo-list";
+import TodoTable from "./_component/todo-table";
+import { CreateTodoInline } from "./_component/create-inline";
 
 export default async function TodoPage() {
   const { userId } = await verifySession();
@@ -10,7 +10,7 @@ export default async function TodoPage() {
   return (
     <div>
       <CreateTodoInline />
-      <TodoList initList={list} />
+      <TodoTable initList={list} />
     </div>
   );
 }
